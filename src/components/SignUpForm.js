@@ -3,22 +3,44 @@ import { useState } from 'react';
 
 const SignUpForm=()=>{
      const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+     const [login,setLogin]=useState(false)
     const handleFormSubmit = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await axios.post("http://localhost:3000/signup", formData);
-    alert(response.data.message);
-    setFormData({ name: '', email: '', password: '' }); // ✅ Clear form
-  } catch (error) {
-    if (error.response && error.response.status === 409) {
-      alert("⚠️ User already exists");
+    let response;
+
+    if (login) {
+      
+      response = await axios.post("http://localhost:3000/login", formData);
+      alert(response.data.message);
+    
     } else {
-      alert("❌ Something went wrong. Please try again.");
-      console.error(error); // Optional: for debugging
+     
+      response = await axios.post("http://localhost:3000/signup", formData);
+      alert(response.data.message);
+    }
+
+    
+    setFormData({ name: '', email: '', password: '' });
+
+  } catch (error) {
+    
+    if (!login && error.response && error.response.status === 409) {
+      alert(" User already exists");
+    } else if (login && error.response && error.response.status === 401) {
+      alert(" Invalid email or password");
+    } else {
+      alert("Something went wrong. Please try again.");
+      console.error(error);
     }
   }
 };
+
+
+const handleLogin=()=>{
+    setLogin(!login)
+}
 
     const handleChange = (e) => {
     const { id, value } = e.target;
@@ -27,15 +49,15 @@ const SignUpForm=()=>{
     return (
         <>
         <form onSubmit={handleFormSubmit}>
-            <label htmlFor="name">Enter your name:</label>
-            <input  value={formData.name} onChange={handleChange} id="name" type="text" required />
+           {!login && <><label htmlFor="name">Enter your name:</label>
+            <input  value={formData.name} onChange={handleChange} id="name" type="text" required /></>}
             <label htmlFor="email">Enter your email:</label>
             <input value={formData.email} onChange={handleChange} id="email" type="email" required />
             <label htmlFor="password">Enter your password:</label>
             <input value={formData.password} onChange={handleChange} id="password" type="password" required />
-            <button>SignUp</button>
+            <button>{login?'LogIn':'SignUp'}</button>
         </form>
-        <button>Existing User - Login</button>
+        <button onClick={handleLogin}>{login?'New User? SignUp':'Existing User - Login'}</button>
         </>
     )
 }
