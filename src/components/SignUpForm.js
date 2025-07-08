@@ -1,9 +1,11 @@
 import axios from 'axios'
 import { useState } from 'react';
+import ExpenseForm from './expense/ExpenseForm';
 
 const SignUpForm=()=>{
      const [formData, setFormData] = useState({ name: '', email: '', password: '' });
      const [login,setLogin]=useState(false)
+     const [isLoggedIn,setIsLoggedIn]=useState(false)
     const handleFormSubmit = async (e) => {
   e.preventDefault();
 
@@ -13,12 +15,12 @@ const SignUpForm=()=>{
     if (login) {
       
       response = await axios.post("http://localhost:3000/login", formData);
-      alert(response.data.message);
+      setIsLoggedIn(true)
     
     } else {
      
       response = await axios.post("http://localhost:3000/signup", formData);
-      alert(response.data.message);
+      setIsLoggedIn(true)
     }
 
     
@@ -48,7 +50,7 @@ const handleLogin=()=>{
   };
     return (
         <>
-        <form onSubmit={handleFormSubmit}>
+        {isLoggedIn?<ExpenseForm/>:<><form onSubmit={handleFormSubmit}>
            {!login && <><label htmlFor="name">Enter your name:</label>
             <input  value={formData.name} onChange={handleChange} id="name" type="text" required /></>}
             <label htmlFor="email">Enter your email:</label>
@@ -57,7 +59,8 @@ const handleLogin=()=>{
             <input value={formData.password} onChange={handleChange} id="password" type="password" required />
             <button>{login?'LogIn':'SignUp'}</button>
         </form>
-        <button onClick={handleLogin}>{login?'New User? SignUp':'Existing User - Login'}</button>
+        <button onClick={handleLogin}>{login?'New User? SignUp':'Existing User - Login'}</button></>}
+        
         </>
     )
 }
