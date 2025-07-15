@@ -14,7 +14,9 @@ const SignUpForm=()=>{
 
     if (login) {
       
-      response = await axios.post("http://localhost:3000/login", formData);
+      response = await axios.post("http://localhost:3000/login", formData)
+      alert(response.data.token)
+      localStorage.setItem("token", response.data.token);
       setIsLoggedIn(true)
     
     } else {
