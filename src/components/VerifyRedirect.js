@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const VerifyRedirect = () => {
+const VerifyRedirect = ({ setUser }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -26,6 +26,7 @@ const VerifyRedirect = () => {
       })
       .then((res) => {
         // ✅ Redirect to premium status page after success
+        localStorage.setItem("user", JSON.stringify(res.data.updatedUser));
         navigate(`/premium-status?success=true&order_id=${orderId}`);
       })
       .catch((err) => {

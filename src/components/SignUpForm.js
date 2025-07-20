@@ -2,30 +2,44 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
-const SignUpForm = ({ setIsLoggedIn }) => {
+const SignUpForm = ({ setIsLoggedIn, setUser }) => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [login, setLogin] = useState(false);
   const navigate = useNavigate();
 
+  const fetchAndSetUser = async (token) => {
+    try {
+      const res = await axios.get("http://localhost:3000/premium/status", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const userData = res.data.user;
+      localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
+    } catch (err) {
+      console.error("Failed to fetch user after login", err);
+    }
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      let res;
       if (login) {
-        const res = await axios.post("http://localhost:3000/login", formData);
-        localStorage.setItem("token", res.data.token);
-        setIsLoggedIn(true);
+        res = await axios.post("http://localhost:3000/login", formData);
       } else {
         await axios.post("http://localhost:3000/signup", formData);
-        const res = await axios.post("http://localhost:3000/login", {
+        res = await axios.post("http://localhost:3000/login", {
           email: formData.email,
           password: formData.password,
         });
-        localStorage.setItem("token", res.data.token);
-        setIsLoggedIn(true);
       }
+
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+      setIsLoggedIn(true);
+
+      await fetchAndSetUser(token);
 
       setFormData({ name: '', email: '', password: '' });
       navigate("/expense");
