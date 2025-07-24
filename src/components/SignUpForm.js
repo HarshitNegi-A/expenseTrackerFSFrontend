@@ -1,9 +1,13 @@
-import axios from 'axios';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUpForm = ({ setIsLoggedIn, setUser }) => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [login, setLogin] = useState(false);
   const navigate = useNavigate();
 
@@ -41,7 +45,7 @@ const SignUpForm = ({ setIsLoggedIn, setUser }) => {
 
       await fetchAndSetUser(token);
 
-      setFormData({ name: '', email: '', password: '' });
+      setFormData({ name: "", email: "", password: "" });
       navigate("/expense");
     } catch (error) {
       if (!login && error.response?.status === 409) {
@@ -68,21 +72,43 @@ const SignUpForm = ({ setIsLoggedIn, setUser }) => {
         {!login && (
           <>
             <label htmlFor="name">Name:</label>
-            <input id="name" value={formData.name} onChange={handleChange} required />
+            <input
+              id="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
           </>
         )}
         <label htmlFor="email">Email:</label>
-        <input id="email" value={formData.email} onChange={handleChange} type="email" required />
+        <input
+          id="email"
+          value={formData.email}
+          onChange={handleChange}
+          type="email"
+          required
+        />
 
         <label htmlFor="password">Password:</label>
-        <input id="password" value={formData.password} onChange={handleChange} type="password" required />
+        <input
+          id="password"
+          value={formData.password}
+          onChange={handleChange}
+          type="password"
+          required
+        />
 
-        <button type="submit">{login ? 'Login' : 'Sign Up'}</button>
+        <button type="submit">{login ? "Login" : "Sign Up"}</button>
       </form>
 
       <button onClick={handleLoginToggle}>
-        {login ? 'New User? Sign Up' : 'Existing User? Login'}
+        {login ? "New User? Sign Up" : "Existing User? Login"}
       </button>
+      {login && (
+        <button type="button" onClick={() => navigate("/forgot-password")}>
+          Forgot Password?
+        </button>
+      )}
     </>
   );
 };

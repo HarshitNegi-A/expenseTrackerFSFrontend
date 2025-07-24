@@ -8,6 +8,7 @@ import PremiumStatus from "./components/PremiumStatus";
 import VerifyRedirect from "./components/VerifyRedirect";
 import Leaderboard from "./components/LeaderBoard";
 import axios from "axios";
+import ForgotPasswordForm from "./components/ForgetPassword";
 
 // import Login from "./Login";
 
@@ -56,6 +57,7 @@ const App = () => {
         <Route path="/premium-status" element={isLoggedIn ? <PremiumStatus setUser={setUser}/> : <Navigate to="/login" />} />
         <Route path="/verify" element={<VerifyRedirect />} />
         <Route path="/leaderboard" element={isLoggedIn ? <Leaderboard /> : <Navigate to="/login" />} />
+        <Route path="/forgot-password" element={<ForgotPasswordForm />} />
       </Routes>
     </Router>
   );
