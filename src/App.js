@@ -9,6 +9,7 @@ import VerifyRedirect from "./components/VerifyRedirect";
 import Leaderboard from "./components/LeaderBoard";
 import axios from "axios";
 import ForgotPasswordForm from "./components/ForgetPassword";
+import ResetPassword from "./components/ResetPassword";
 
 // import Login from "./Login";
 
@@ -58,6 +59,7 @@ const App = () => {
         <Route path="/verify" element={<VerifyRedirect />} />
         <Route path="/leaderboard" element={isLoggedIn ? <Leaderboard /> : <Navigate to="/login" />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+         <Route path="/password/resetpassword/:id" element={<ResetPassword />} />
       </Routes>
     </Router>
   );
